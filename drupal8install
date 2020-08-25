@@ -1,0 +1,53 @@
+Drupal 8 installation
+Pre-req
+-	Redhat/CentOS 7+
+-	Access to download files from internet
+-	Root access
+
+1.	Sudo as root
+2.	Disable setenforce
+a.	sudo setenforce 0
+3.	install gi
+a.	yum install git
+4.	install php 7
+a.	yum install epel-release
+b.	yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+c.	yum install -y yum-utils
+d.	yum-config-manager --disable remi-php54
+e.	yum-config-manager --enable remi-php73
+f.	yum install php
+5.	install php extension
+a.	yum install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
+b.	yum install php-fpm php-gd php-json php-mbstring php-mysqlnd php-xml php-xmlrpc php-opcache php-xsd php-zip unzip php-cli yum-utils php-common
+6.	install composer
+a.	yum update
+b.	curl -sS https://getcomposer.org/installer | php
+c.	mv composer.phar /usr/local/bin/composer
+7.	install apigee drupal 8 kinckstart
+a.	composer create-project apigee/devportal-kickstart-project:8.x-dev /var/www/html --no-interaction
+8.	install mysql
+a.	wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+b.	rpm -ivh mysql-community-release-el7-5.noarch.rpm
+c.	yum update
+d.	yum install mysql-server
+e.	systemctl start mysqld
+9.	create db/user
+a.	sign into mysql
+i.	mysql -u root -p
+b.	create user drupal8@localhost identified by 'drupal8';
+c.	create database drupal8 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+d.	grant all on drupal8.* to 'drupal8'@'localhost' identified by 'drupal8';
+e.	FLUSH PRIVILEGES;
+10.	Install apache
+a.	yum update httpd
+b.	yum install httpd
+c.	systemctl start httpd
+d.	replace /etc/httpd/conf/httpd.conf with attached file 
+e.	chown -R apache:apache /var/www/html
+f.	chmod -R 777 /var/www/html
+g.	chcon -R -t httpd_sys_content_rw_t /var/www/html/
+h.	systemctl stop httpd
+i.	systemctl start httpd
+11.	config portal
+a.	sign into http://hostname
+b.	field in the db/apigee info
